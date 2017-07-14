@@ -15,7 +15,7 @@
     <Logger name="com.mesirves.app" level="debug">
       <AppenderRef ref="STDOUT"/>
     </Logger>
-    <Root level="info">
+    <Root level="debug">
       <AppenderRef ref="A1"/>
     </Root>
   </Loggers>

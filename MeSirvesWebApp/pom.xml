@@ -159,12 +159,18 @@
 			<version>1.10.0.BUILD-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Spring-data-cassandra -->
+		<!-- QR -->
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-cassandra</artifactId>
-			<version>1.4.6.RELEASE</version>
-		</dependency>
+	      <groupId>com.google.zxing</groupId>
+	      <artifactId>core</artifactId>
+	      <version>2.0</version>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>com.google.zxing</groupId>
+	      <artifactId>javase</artifactId>
+	      <version>2.0</version>
+	    </dependency>
 
 	</dependencies>
 	<repositories>
