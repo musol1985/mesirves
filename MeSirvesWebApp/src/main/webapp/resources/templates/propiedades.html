@@ -1,0 +1,16 @@
+<table>
+	<tr ng-repeat="p in propiedades">
+		<td>{{p.name}}: </td>
+		
+		<td ng-if="p.type=='boolean'">
+			<input type="checkbox" ng-checked="p.value=='true'" ng-change="cambiarPropiedad(p, valor)" ng-model="valor"/>
+		</td>
+		
+		<td ng-if="p.type=='select'">
+			<!-- <select name="select{{p.name}}" id="select{{p.name}}" ng-change="cambiarPropiedadSelect(p, selectedItem, label, value)" ng-model="selectedItem" ng-options="key for (key, value) in p.actions" ng-init="selectedItem=key">-->
+			<select ng-model="selected" ng-model="selected" ng-change="cambiarPropiedad(p,selected)" ng-init="selected=p.value" >
+			 	<option ng-repeat="(key, value) in p.actions" value="{{key}}">{{key}}</option>
+   		 	</select>
+		</td>
+	</tr>
+</table>

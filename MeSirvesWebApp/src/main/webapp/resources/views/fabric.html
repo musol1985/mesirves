@@ -1,0 +1,144 @@
+<html>
+<head>
+<script src="resources/vendors/bower_components/fabric/dist/fabric.js"></script>
+<script src="resources/vendors/bower_components/dom-to-image/dist/dom-to-image.min.js"></script>
+</head>
+<body>
+<canvas id="c" width="1000" height="500"></canvas>
+<div id="hola">
+<input type="text" id="texto">
+<input type="button" id="btn" onclick="btnOK()">
+</div>
+<script>
+
+
+var checkbox={
+		className:"checkbox",
+		images:["resources/img/ui/checkOK.png",
+				"resources/img/ui/checkNOK.png"],
+		props:[{type:"image", name:"value"}]
+		
+};
+
+var canvas = new fabric.Canvas('c');
+var imgElement = document.getElementById('my-image');
+var seleccion;
+
+canvas.on('mouse:down', function(options) {
+  	if (options.target) {
+    	//alert('an object was clicked! '+ options.target.type);
+  		seleccion=options.target;
+  	}
+  	
+});
+
+function loadPropertiesPanel(component){
+	
+}
+
+var helpers=[];
+
+function clearHelpers(){
+	helpers.forEach(function(helper){
+		canvas.remove(helper);		
+	});
+	helpers=[];
+}
+
+canvas.on("mouse:up", function(options){
+	clearHelpers();
+});
+
+canvas.on("object:moving", function(options){
+	clearHelpers();
+	
+	console.log(canvas.getObjects());
+	if(options.target){
+		var me=options.target;
+		canvas.getObjects().forEach(function(item){
+			if(item!=me){
+				
+				if(!checkHelper(me, item.top+item.height, me.top, true,0) &&
+				 	!checkHelper(me, item.top, me.top, true,0)){
+					checkHelper(me, item.top+item.height, me.top+me.height, true, me.height);
+					checkHelper(me, item.top, me.top+me.height, true, me.height);
+				}
+				
+				
+				if(!checkHelper(me, item.left+item.width, me.left, false,0) &&
+					!checkHelper(me, item.left, me.left, false,0)){
+						checkHelper(me, item.left+item.width, me.left+me.width, false, me.width);
+						checkHelper(me, item.left, me.left+me.width, false, me.width);
+					}
+				
+			}
+		});
+	}
+});
+
+function checkHelper(me, pos1, posItem, horizontal, add){
+	if(Math.abs((pos1 )-(posItem))<20){
+		var helper;
+		
+		if(horizontal){
+			me.top=pos1-add;
+			helper=makeLine([0, pos1 , canvas.width, pos1 ]);
+		}else{
+			me.left=pos1-add;
+			helper=makeLine([pos1, 0 , pos1, canvas.height ]);
+		}
+		
+		helpers.push(helper);
+		canvas.add(helper);
+		
+		return true;
+	}
+	
+	return false;
+}
+
+function makeLine(coords) {
+    return new fabric.Line(coords, {
+      strokeDashArray: [5, 5],
+      stroke: 'blue',
+      strokeWidth: 1,
+      selectable: false
+    });
+  }
+
+	addCheck("Guardar", true);
+	
+	addCheck("Eliminar",false);
+	
+	addCheck("Test",false);
+
+
+
+function addCheck(texto, valor){
+	var url='resources/img/ui/checkOK.png';
+	if(!valor)
+		url='resources/img/ui/checkNOK.png';
+
+	fabric.Image.fromURL(url, function(img){
+		var text = new fabric.Text(texto, { left: img.width +2, top: 0 });
+		
+		img.top=text.height/2-img.height/2;
+		var check=new fabric.Group([img, text], { left: 100, top: 100 });
+		
+		check.tipo="check";
+		check.valor=valor;
+		canvas.add(check);
+	});
+}
+
+function btnOK(){
+	if(seleccion && seleccion.tipo){
+		canvas.remove(seleccion);
+		if(seleccion.tipo=="check"){
+			addCheck(document.getElementById("texto").value, seleccion.valor)
+		}
+	}
+}
+</script>
+</body>
+</html>

@@ -25,6 +25,21 @@ public class MainController{
 	    public String homePage(ModelMap model) {
 	        return "/resources/views/client.html";
 	    }
+	    
+	    @RequestMapping(value="/editor", method = RequestMethod.GET)
+	    public String componentEditor(ModelMap model) {
+	        return "/resources/views/componentEditor.html";
+	    }
+	    
+	    @RequestMapping(value = "/mail",method = RequestMethod.GET)
+	    public String test(ModelMap model) {
+	        return "/resources/views/mail.html";
+	    }
+	    
+	    @RequestMapping(value = "/fabric",method = RequestMethod.GET)
+	    public String fabric(ModelMap model) {
+	        return "/resources/views/fabric.html";
+	    }
 	 
 	    @RequestMapping(value = "/app", method = RequestMethod.GET)
 	    public String adminPage(ModelMap model) {

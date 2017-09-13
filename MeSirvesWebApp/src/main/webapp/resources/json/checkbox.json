@@ -1,0 +1,30 @@
+{	"className":"checkbox",
+	"images":[{"url":"resources/img/ui/checkOK.png"},
+				{"url":"resources/img/ui/checkNOK.png"}],
+	"props":{
+				"value":{
+					"type":"select", "value":"checked", 
+					"actions":{
+							"checked":[
+										{"elementName":"img", "image":"resources/img/ui/checkOK.png"}, 
+										{"elementName":"text", "text":"checkeado"}
+								   ],
+							"unchecked":[
+										{"elementName":"img", "image":"resources/img/ui/checkNOK.png"},
+
+										{"elementName":"text", "text":"no chekeado"}
+									]
+									,
+							"disabled":[
+										{"elementName":"img", "image":"resources/img/ui/checkOFF.png"},
+										{"elementName":"text", "text":"desactivado"}
+									]
+						}
+				},
+				"text":{"type":"string", "value":"Checkboxs"}
+			},
+	"elements":[
+					{"name":"img","type":"image", "left":0, "top":15, "properties":["value"]},
+					{"name":"text","type":"text", "left":25, "top":0, "properties":["value"], "value":"hola"}
+				]	
+}

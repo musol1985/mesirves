@@ -1,6 +1,7 @@
 var app = angular.module('MeSirvES', [
     'ngAnimate',
-    'ngMaterial'
+    'ngMaterial',
+    'ui.router',
 ])
 
 app.config(function($mdThemingProvider) {
