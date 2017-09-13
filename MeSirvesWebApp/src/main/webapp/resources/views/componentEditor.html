@@ -20,7 +20,11 @@
 
 <body ng-app="MeSirvES">
 
+
 	<div ng-controller="MainController" ng-cloak>
+	<div class="btn btn-primary" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true}" >aaaaaaaaaaaa</div>
+<div data-drop="true" jqyoui-droppable="{onDrop:prueba()}">adiosssssssssssssssss</div>
+	
 		<editor id="component" test="eduuu" width="800" height="500">
 		</editor>
 
@@ -41,7 +45,11 @@
 	<script src="resources/js/directives.js"></script>
 	<script src="resources/js/services.js"></script>
 	<script src="resources/js/config.js"></script>
-
+	
+	<!-- Angular modules -->
+	<script src="resources/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="resources/vendors/bower_components/angular-dragdrop/src/angular-dragdrop.min.js"></script>
+	<script src="resources/vendors/bower_components/jquery-ui/jquery-ui.min.js"></script>
 </body>
 
 </html>
