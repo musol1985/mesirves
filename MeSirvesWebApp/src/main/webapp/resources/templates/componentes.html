@@ -1,0 +1,10 @@
+<table>
+	<tr><td><button ng-click="drawRect()">Rec</button></td></tr>
+	<tr ng-repeat="componente in componentes">
+		<td>
+		<div data-drag="true" ng-model="componente" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" jqyoui-draggable="{placeholder: 'keep', }" >
+		<img src="{{componente.preview}}" />
+		</div>
+		</td>
+	</tr>
+</table>

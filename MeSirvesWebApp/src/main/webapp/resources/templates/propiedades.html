@@ -12,5 +12,9 @@
 			 	<option ng-repeat="(key, value) in p.actions" value="{{key}}">{{key}}</option>
    		 	</select>
 		</td>
+		
+		<td ng-if="p.type=='string'">
+			<input type="text" ng-change="cambiarPropiedad(p, p.value)" ng-model="p.value"/>
+		</td>
 	</tr>
 </table>

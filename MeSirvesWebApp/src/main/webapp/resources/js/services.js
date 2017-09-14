@@ -7,7 +7,8 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 			canvas.helpers=[];
 			
 			canvas.on("mouse:up", function(options){
-				service.clearHelpers(canvas);
+				//service.clearHelpers(canvas);
+				$rootScope.$broadcast('mouseUp', options, canvas);
 			});
 			
 			canvas.on("object:moving", function(options){
@@ -16,6 +17,14 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 			
 			canvas.on("object:selected", function(options){
 				$rootScope.$broadcast('objectSelected', options.target, canvas);
+			});
+			
+			canvas.on("mouse:down", function(options){
+				$rootScope.$broadcast('mouseDown', options, canvas);
+			});
+			
+			canvas.on("mouse:move", function(options){
+				$rootScope.$broadcast('mouseMove', options, canvas);
 			});
 		},
 		
@@ -86,19 +95,28 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 		 loadComponents:function(canvas){			 			
 			 canvas.components=[];
 			 
-			 this.loadComponent('resources/json/checkbox.json', canvas);
-			 this.loadComponent('resources/json/checkboxNOK.json', canvas);
+			 this.loadComponentByURL('resources/json/checkbox.json', canvas);
+			 this.loadComponentByURL('resources/json/checkboxNOK.json', canvas);
 		 },
 		 
-		 loadComponent:function(url, canvas){
+		 loadComponentByURL:function(url, canvas){
 			 var service=this;
 			 
 			 $http.get(url).then(function(res) {
-				 var comp=service.getNewComponent(res.data)
-				 comp.create(canvas);
-				 canvas.components.push(comp);
+				 service.loadComponent(res.data, canvas);
 			 });
 		 },		
+		 
+		 loadComponent:function(componentData, canvas, onLoaded){
+			 var comp=this.getNewComponent(componentData)
+			 comp.create(function(groupCanvas){
+				 if(onLoaded)
+					 onLoaded(groupCanvas);
+				 
+				 canvas.add(groupCanvas);
+			 });
+			 canvas.components.push(comp);
+		 },
 		 
 		 getElementInCanvasGroup:function(elementName, group){
 			for(var i=0;i<group.size();i++){				
@@ -109,47 +127,28 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 			return null;
 		 },
 		 
+		 applyProperty:function(property, element){
+			 if(property.name=="color"){
+				 element.set("fill",property.value);
+			 }
+		 },		 
 		 getNewComponent:function(data){
 			return {
 				data:data,
-				create:function(canvas){
+				create:function(callback){
 					//Cargamos las imagenes
 					var component=this;
-					
-					/*if(data.images && data.images.length>0){
-						console.log("Cargamos las imagenes");
-						data.imagesLoaded=0;
-						
-						data.images.forEach(function(imageBean){
-							
-							fabric.Image.fromURL(imageBean.url, function(img){
-								data.imagesLoaded++;
-								console.log("Imagen "+data.imagesLoaded+"/"+data.images.length+" cargada =>"+imageBean.url)
-								imageBean.img=img;
-								imageBean.id=data.imagesLoaded;
-								if(data.imagesLoaded==data.images.length){
-									//Cuando se hayan cargado todas las imagenes, cargamos los elementos
-									component.loadElements(canvas, data);
-								}
-							});
-							
-						});
-					}else{
-						console.log("No hay imagenes a cargar");
-						component.loadElements(canvas, data);
-					}	*/
-					component.loadElements(canvas, data);
+
+					component.loadElements(data, callback);
 				},
-				loadElements:function(canvas, data){//metodo para cargar los elementos del componente
+				loadElements:function(data, onCreated){//metodo para cargar los elementos del componente
 					var group=[];
 					var component=this;
 					
 					console.log("Cargando elementos");
 					
 					data.elements.forEach(function(element, index){
-						console.log("Cargando elemento "+(index+1)+"/"+data.elements.length);
-						
-						
+						console.log("Cargando elemento "+(index+1)+"/"+data.elements.length);	
 						
 						if(element.type=="image"){
 							var image={imageId:"-1", name:element.name, left:element.left, top:element.top};
@@ -164,7 +163,7 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 							element.properties.forEach(function(propKey){
 								var prop=data.props[propKey];
 
-								component.applyProperty(prop, data, group, element, canvas);
+								component.applyProperty(prop, propKey, prop.value, data, group, element);
 							});
 						}
 					});
@@ -193,15 +192,26 @@ app.factory('editorService', function( $rootScope , $http, $state) {
 
 					component.loadImages(grupo, function(){
 						var groupComponent=new fabric.Group(grupo.items);
+
+						groupComponent.props={};
+						
+						for(key in data.props){
+							var prop=data.props[key];
+							
+							groupComponent.props[key]=prop.value;
+						};
+						
+						groupComponent.props.name=data.className;
+
 						groupComponent.component=component;
-						canvas.add(groupComponent);		
+						onCreated(groupComponent);
 					});
 					
 				},
 				
-				applyProperty:function(prop, data, group, element, canvas){
+				applyProperty:function(prop, key, value, data, group, element){
 					if(prop.type=="boolean" || prop.type=="select"){
-						var actions=prop.actions[prop.value];
+						var actions=prop.actions[value];
 
 						actions.forEach(function(action){
 							if(action.elementName==element.name){

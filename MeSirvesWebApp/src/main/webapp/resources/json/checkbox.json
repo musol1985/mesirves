@@ -1,4 +1,6 @@
-{	"className":"checkbox",
+{	"package":"android.material",
+	"className":"checkbox",
+	"preview":"resources/img/ui/checkPreview.png",
 	"images":[{"url":"resources/img/ui/checkOK.png"},
 				{"url":"resources/img/ui/checkNOK.png"}],
 	"props":{
@@ -11,7 +13,6 @@
 								   ],
 							"unchecked":[
 										{"elementName":"img", "image":"resources/img/ui/checkNOK.png"},
-
 										{"elementName":"text", "text":"no chekeado"}
 									]
 									,
@@ -20,8 +21,7 @@
 										{"elementName":"text", "text":"desactivado"}
 									]
 						}
-				},
-				"text":{"type":"string", "value":"Checkboxs"}
+				}
 			},
 	"elements":[
 					{"name":"img","type":"image", "left":0, "top":15, "properties":["value"]},
